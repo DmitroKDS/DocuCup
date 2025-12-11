@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DocuCup</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <script src="{{ url_for('static', filename='config.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='lang.js') }}"></script>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body style="height: 100svh; position: relative;" class="flex">
+
+
+    {% if doc_id %}
+    <sidebar class="flex column hidden" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%;">
+    {% else %}
+    <sidebar class="flex column" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%;">
+    {% endif %}            
+        <div class="opacity-back" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 4; background-color: #000; opacity: 0.3"></div>
+        <content class="flex column" style="height: 100%; z-index: 5; width: max(50%, 260px); padding: 0 12px; background-color:var(--second-background)">
+            <div style="padding: 10px 0" class="flex between">
+                <button onclick="this.parentElement.parentElement.parentElement.classList.add('hidden')" class="icon-button flex center">
+                    <span style="font-size: 30px;" class="material-symbols-outlined">
+                        thumbnail_bar
+                    </span>
+                </button>
+                <button class="icon-button flex center" onclick="window.location.href='/add-doc'">
+                    <span style="font-size: 30px;" class="material-symbols-outlined">
+                        add_circle
+                    </span>
+                </button>
+            </div>
+            <div onclick="window.location.href='/'" style="padding: 0 0 30px 0; cursor: pointer;" class="flex center">
+                <img style="width: 30px;" src="../static/images/logo.png">
+                <p style="font-weight: bold; margin-left: 15px; font-size: 18px;">
+                    Docu
+                    <span style="font-size: 18px;color: var(--primary)">Cup</span>
+                </p>
+            </div>
+            <div style="align-items: center;" class="flex column">
+                {% for doc in docs %}
+                <div onclick="window.location.href='{{doc.id}}'" style="width: 100%; position: relative; align-items: center;" class="doc-button flex between {% if doc.id == doc_id %}activate{% endif %}">
+                    <span style="white-space: nowrap; overflow: hidden;">{{doc.title}}</span>
+                    <button class="info" onclick="openForm(this)">
+                        <span class="material-symbols-outlined">
+                            more_horiz
+                        </span>
+                    </button>
+                    <div onclick="event.stopPropagation();" style="display: none; cursor: pointer; position: absolute; left: 207px; top: 38px; z-index: 50; padding: 12px; background-color: #fff; border: 2px solid rgb(from var(--secondary) r g b / 0.2); outline: 2px solid rgb(from var(--secondary) r g b / 0.1); border-radius: 6px;">
+                        <button onclick="event.stopPropagation();console.log('i')" class="form-button flex center">
+                            <span class="material-symbols-outlined">
+                                edit
+                            </span>
+                            Rename
+                        </button>
+
+                        <form action="/home/{{doc.id}}/delete" method="POST">
+                            <button onclick="event.stopPropagation();" style="color: red" class="form-button flex">
+                                <span style="color: red; font-size: 24px;" class="material-symbols-outlined">
+                                    delete
+                                </span>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </content>
+    </sidebar>
+
+
+
+    {% if doc_id %}
+    <main style="width: 100%; position: relative;" class="doc-main flex column">
+        <div style="padding: 12px 18px 0px 18px;" class="flex between">
+            <button style="font-weight: bold; color: var(--text)" onclick="document.querySelector('sidebar').classList.remove('hidden');" class="icon-button flex center">
+                <span style="font-size: 30px; margin-right: 6px;" class="material-symbols-outlined">
+                    thumbnail_bar
+                </span>
+                All documents
+            </button>
+            <button style="font-weight: bold; color: var(--text)" onclick="window.location.href='/add-doc'" class="icon-button flex center">
+                <span style="font-size: 30px; margin-right: 6px;" class="material-symbols-outlined">
+                    add_circle
+                </span>
+                Add document
+            </button>
+        </div>
+        <div style="padding: 10px 30px 10px 30px; overflow-y: auto;" class="flex column">
+            <div class="flex column center" style="padding: 10px 20px 30px 20px;">
+                <div class="flex between" style="margin-bottom: 15px; width: 100%; align-items: center;">
+                    <h1 style="font-size: 18px; color: var(--primary); width: 60%; overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{doc_title}}</h1>
+                    <div style="padding: 6px; border: 2px solid var(--text); border-radius: 8px; margin-right: 20px; font-weight: bold" class="flex center credits">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            toll
+                        </span>
+                        {{credits}} credits
+                    </div>
+                </div>
+
+                <div class="flex" style="background-color: var(--second-background); padding: 6px; border-radius: 12px;">
+                    <button class="text-icon-button flex center activate" style="color: var(--text); font-weight: 500;">
+                        <span style="margin-right: 4px; font-size: 20px" class="material-symbols-outlined">
+                            description
+                        </span>
+                        Document
+                    </button>
+
+                    <button onclick="this.parentElement.parentElement.parentElement.parentElement.classList.add('hidden'); document.querySelector('mainchat').classList.remove('hidden');" class="text-icon-button flex center" style="color: var(--text); font-weight: 500;">
+                        <span style="margin-right: 4px; font-size: 20px" class="material-symbols-outlined">
+                            chat
+                        </span>
+                        Chat
+                    </button>
+                </div>
+            </div>
+
+            <div style="padding: 15px; border-radius: 12px; border: 3px solid rgb(229, 229, 229); margin-bottom: 40px;" class="flex column page">
+                <h1 style="font-size: 18px; margin-bottom: 10px;">Your document</h1>
+                <div style="word-break: break-word; max-height: 30px; overflow: hidden; margin-bottom: 10px;" onmouseup="textSelected()" ontouchend="textSelected()">
+                    {{ doc|safe }}
+                </div>
+                <button class="page-button flex center" onclick="togglePage(this);">
+                    <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                        add
+                    </span>
+                    Open page
+                </button>
+            </div>
+            
+            <div style="padding: 15px; border-radius: 12px; border: 3px solid rgb(229, 229, 229); margin-bottom: 40px;" class="flex column page">
+                <h1 style="font-size: 18px; margin-bottom: 10px;">Key Points</h1>
+                <div style="word-break: break-word; max-height: 30px; overflow: hidden; margin-bottom: 10px;">
+                    {{ doc_key_points|safe }}
+                </div>
+                <button class="page-button flex center" onclick="togglePage(this)">
+                    <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                        add
+                    </span>
+                    Open page
+                </button>
+            </div>
+            
+            <div style="padding: 15px; border-radius: 12px; border: 3px solid rgb(229, 229, 229); margin-bottom: 40px;" class="flex column page">
+                <h1 style="font-size: 18px; margin-bottom: 10px;">Summary</h1>
+                <div style="word-break: break-word; max-height: 30px; overflow: hidden; margin-bottom: 10px;">
+                    {{ doc_summary|safe }}
+                </div>
+                <button class="page-button flex center" onclick="togglePage(this)">
+                    <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                        add
+                    </span>
+                    Open page
+                </button>
+            </div>
+            
+            <div style="padding: 15px; border-radius: 12px; border: 3px solid rgb(229, 229, 229); margin-bottom: 40px;" class="flex column page">
+                <h1 style="font-size: 18px; margin-bottom: 10px;">Risk Analysis</h1>
+                <div style="word-break: break-word; max-height: 30px; overflow: hidden; margin-bottom: 10px;">
+                    {{ doc_risk|safe }}
+                </div>
+                <button class="page-button flex center" onclick="togglePage(this)">
+                    <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                        add
+                    </span>
+                    Open page
+                </button>
+            </div>
+            
+            <div style="padding: 15px; border-radius: 12px; border: 3px solid rgb(229, 229, 229); margin-bottom: 40px;" class="flex column page">
+                <h1 style="font-size: 18px; margin-bottom: 10px;">Usefull Info</h1>
+                <div style="word-break: break-word; max-height: 30px; overflow: hidden; margin-bottom: 10px;">
+                    {{ doc_additional_info|safe }}
+                </div>
+                <button class="page-button flex center" onclick="togglePage(this)">
+                    <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                        add
+                    </span>
+                    Open page
+                </button>
+            </div>
+            
+            <footer>
+                <div style="width: 100%; background-color: var(--secondary); color: #fff; padding: 10px; text-align: center;">
+                    Made with love by Team DocuCup
+                </div>
+                <div style="width: 100%; background-color: #fff; padding: 15px 15px 30px 15px; text-align: center; gap: 15px;" class="flex center column">
+                    <h3>Entrepreneur and developer - Dima Krivulianskiy</h3>
+                    <div class="flex center" style="gap: 10px;">
+                        <img style="width: 60px; border-radius: 5px; margin-right: 30px;" src="{{ url_for('static', filename='images/dima.png') }}" alt="Dima">
+                        <a href="https://t.me/dmitrokds" style="font-size:22px; cursor: pointer; text-decoration: none;" class="flex center">
+                            <div style="font-size:42px; margin-right: 10px;" class="fa fa-brands fa-telegram">
+                            </div>
+                            @dmitrokds
+                        </a>
+
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <div style="padding: 10px 0 min(10%, 15px) 0" class="flex column center exp-but hidden">
+            <button disabled onclick="explainSelectedText()" style="margin-bottom: 5px; background-color:rgba(176, 59, 5, 0.45); cursor: unset;" class="explain-but primary-button">Explain selected text</button>
+            <p class="exp-cost">It will cost 0 credits</p>
+        </div>
+    </main>
+    {% else %}
+    <main style="width: 100%; position: relative;" class="chat-main flex column">
+        <div style="padding: 12px 18px 0px 18px;" class="flex between">
+            <button style="font-weight: bold; color: var(--text)" onclick="document.querySelector('sidebar').classList.remove('hidden');" class="icon-button flex center">
+                <span style="font-size: 30px; margin-right: 6px;" class="material-symbols-outlined">
+                    thumbnail_bar
+                </span>
+                All documents
+            </button>
+            <button style="font-weight: bold; color: var(--text)" onclick="window.location.href='/add-doc'" class="icon-button flex center">
+                <span style="font-size: 30px; margin-right: 6px;" class="material-symbols-outlined">
+                    add_circle
+                </span>
+                Add document
+            </button>
+        </div>
+        <div class="flex center">
+            <div style="padding: 6px; border: 2px solid var(--text); border-radius: 8px; margin-right: 20px; font-weight: bold" class="flex center credits">
+                <span class="material-symbols-outlined" style="margin-right: 5px;">
+                    toll
+                </span>
+                {{credits}} credits
+            </div>
+        </div>
+
+        <div style="flex-grow: 1; min-height: 30px;"></div>
+
+        <footer>
+            <div style="width: 100%; background-color: var(--secondary); color: #fff; padding: 10px; text-align: center;">
+                Made with love by Team DocuCup
+            </div>
+            <div style="width: 100%; background-color: #fff; padding: 15px 15px 30px 15px; text-align: center; gap: 15px;" class="flex center column">
+                <h3>Entrepreneur and developer - Dima Krivulianskiy</h3>
+                <div class="flex center" style="gap: 10px;">
+                    <img style="width: 60px; border-radius: 5px; margin-right: 30px;" src="{{ url_for('static', filename='images/dima.png') }}" alt="Dima">
+                    <a href="https://t.me/dmitrokds" style="font-size:22px; cursor: pointer; text-decoration: none;" class="flex center">
+                        <div style="font-size:42px; margin-right: 10px;" class="fa fa-brands fa-telegram">
+                        </div>
+                        @dmitrokds
+                    </a>
+    
+                </div>
+            </div>
+        </footer>
+    </main>
+    {% endif %}
+
+
+
+    <mainchat style="width: 100%; position: relative;" class="flex column hidden">
+        <div style="padding: 12px 18px 0px 18px;" class="flex between">
+            <button style="font-weight: bold; color: var(--text)" onclick="document.querySelector('sidebar').classList.remove('hidden');" class="icon-button flex center">
+                <span style="font-size: 30px; margin-right: 6px;" class="material-symbols-outlined">
+                    thumbnail_bar
+                </span>
+                All documents
+            </button>
+            <button style="font-weight: bold; color: var(--text)" onclick="window.location.href='/add-doc'" class="icon-button flex center">
+                <span style="font-size: 30px; margin-right: 6px;" class="material-symbols-outlined">
+                    add_circle
+                </span>
+                Add document
+            </button>
+        </div>
+        <div style="padding: 10px 30px 0px 30px;" class="flex column">
+            <div class="flex column center" style="padding: 10px 20px 10px 20px;">
+                <div class="flex between" style="margin-bottom: 15px; width: 100%; align-items: center;">
+                    <h1 style="font-size: 18px; color: var(--primary); width: 60%; overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{doc_title}}</h1>
+                    <div style="padding: 6px; border: 2px solid var(--text); border-radius: 8px; margin-right: 20px; font-weight: bold" class="flex center credits">
+                        <span class="material-symbols-outlined" style="margin-right: 5px;">
+                            toll
+                        </span>
+                        {{credits}} credits
+                    </div>
+                </div>
+                
+                <div class="flex" style="background-color: var(--second-background); padding: 6px; border-radius: 12px;">
+                    <button onclick="this.parentElement.parentElement.parentElement.parentElement.classList.add('hidden'); document.querySelector('main').classList.remove('hidden');" class="text-icon-button flex center" style="color: var(--text); font-weight: 500;">
+                        <span style="margin-right: 4px; font-size: 20px" class="material-symbols-outlined">
+                            description
+                        </span>
+                        Document
+                    </button>
+
+                    <button class="text-icon-button flex center activate" style="color: var(--text); font-weight: 500;">
+                        <span style="margin-right: 4px; font-size: 20px" class="material-symbols-outlined">
+                            chat
+                        </span>
+                        Chat
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 20px 54px 0 54px; overflow-y:auto; height: auto;" class="flex column messages">
+
+        </div>
+
+        <div style="padding: 10px 0 min(10%, 15px) 0" class="flex column center">
+            <div class="input-special" style="margin-bottom: 5px;">
+                <input onkeypress="onEnter(this, event);" oninput="onMsgChange(this, event)" maxlength="225" style="width: 100%;" type="text" placeholder="Ask anything">
+                <button onclick="ask(this)" class="flex center onchat" disabled>
+                    <span class="material-symbols-outlined">
+                        arrow_upward
+                    </span>
+                </button>
+            </div>
+            <p class="msg-cost">It will cost 0 credits</p>
+        </div>
+    </mainchat>
+
+
+
+    <div class="flex center hidden warn-banner" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5)">
+        <div class="flex center column between" style="padding: 50px 10px 40px 10px; width: 460px; height: 190px; background-color: #fff; border-radius: 12px;">
+            <h1 style="font-size: 24px; text-align: center;">Something went wrong.</h1>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="primary-button">Ok</button>
+        </div>
+    </div>
+
+
+    <script>
+        translatePage()
+
+        function closePage(button){
+            button.innerHTML = `
+                <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                    add
+                </span>
+                Open page
+            `
+            button.parentElement.querySelector("div").style.maxHeight = "30px";
+
+            document.querySelector(".exp-but").classList.add("hidden");
+        }
+
+        function togglePage(button){
+            if (button.querySelector("span").innerText == "add"){
+                document.querySelectorAll(".page button").forEach(el => closePage(el))
+                
+                if (button == document.querySelector(".page button")){  
+                    document.querySelector(".exp-but").classList.remove("hidden");   
+                }           
+
+                button.innerHTML = `
+                    <span style="font-size: 20px; margin-right: 6px; font-weight: 500;" class="material-symbols-outlined">
+                        remove
+                    </span>
+                    Close page
+                `
+                button.parentElement.querySelector("div").style.maxHeight = "unset";
+            } else{
+                closePage(button);
+            }
+            translatePage()
+            button.parentElement.querySelector("h1").scrollIntoView({behavior: "smooth", block: "start"});
+        }
+
+
+        function openForm(form){
+            event.stopPropagation();
+            form.parentElement.querySelector('div').style.display='block';
+            form.parentElement.classList.add('activate');
+            document.onclick = (event) => {
+                if (!form.parentElement.querySelector('div').contains(event.target)) {
+                    form.parentElement.querySelector('div').style.display='none';
+                    form.parentElement.classList.remove('activate');
+                    document.onclick = null;
+                }
+            }
+        }
+
+
+        var selectedText = "";
+        let onChat = false;
+
+        function explainSelectedText(){
+            document.querySelector('main').classList.add("hidden");
+            document.querySelector('mainchat').classList.remove("hidden");
+
+            last_chat=null;
+
+            let formData = new FormData();
+            formData.append("content", selectedText);    
+
+            fetch(`${hostUrl}/home/{{doc_id}}/explain-part`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                last_chat=null;
+                return response.json();
+            })
+            .then(data => {
+                if (data.warn) {
+                    console.log(data.warn);
+                    document.querySelector('.warn-banner').classList.remove("hidden");
+                    document.querySelector('.warn-banner').querySelector("h1").innerText = lang[data.warn]?.[langCode] ?? data.warn
+                } else{
+                    let text = "credits"
+                    document.querySelectorAll('.credits').forEach(el => el.innerText = `${data.credits} ${lang[text]?.[langCode] ?? text}`)
+                }
+            })
+
+            document.querySelector('.explain-but').disabled = true;
+            document.querySelector('.explain-but').style.backgroundColor='rgba(176, 59, 5, 0.45)';
+            document.querySelector('.explain-but').style.cursor = 'unset';
+        }
+
+
+        let last_chat = null;
+
+        function getChat(){
+            if (!document.querySelector("mainchat").classList.contains("hidden")){
+                fetch(`${hostUrl}/home/{{doc_id}}/chat`)
+                .then(response => response.json())
+                .then(result => {
+                    let messages = "";
+
+                    if (JSON.stringify(result.chat) !== JSON.stringify(last_chat)) {
+                        result.chat.forEach(message => {
+                            messages += `
+                                <p class="${message.type}">
+                                ${message.content}
+                                </p>
+                            `;
+                        });
+
+                        document.querySelector('.messages').innerHTML = messages;
+                        if (last_chat==null){
+                            document.querySelector('.messages').scrollTop = document.querySelector('.messages').scrollHeight;
+                        }
+
+                        last_chat = result.chat;
+                    }
+                })
+                .catch(error => console.error("Error fetching chat:", error));
+            }
+        }
+
+
+        function onEnter(input, event) {
+            if (event.key == 'Enter'){
+                ask(input.parentElement.querySelector('button'));
+
+                var text = `It will cost 0 credits`
+                document.querySelector('.msg-cost').innerText = lang[text]?.[langCode] ?? text
+            } 
+        }
+
+
+        function onMsgChange(input, event){
+            button = input.parentElement.querySelector('button');
+            if (input.value==""){
+                button.classList.add('onchat');
+                button.disabled = true;
+
+                var text = `It will cost 0 credits`
+                document.querySelector('.msg-cost').innerText = lang[text]?.[langCode] ?? text
+            } else {
+                button.classList.remove('onchat');
+                button.disabled = false;
+
+                let sumChars = {{ sum_chars|default(0) }};
+
+                let cost = Math.ceil((input.value.length+sumChars)/6000)
+                let acceptText = ["It will cost", "credits"]
+                document.querySelector('.msg-cost').innerText = `${lang[acceptText[0]]?.[langCode] ?? acceptText[0]} ${cost} ${lang[acceptText[1]]?.[langCode] ?? acceptText[1]}`
+            }
+        }
+
+        function ask(button) {
+            if (onChat === false){
+                onChat=true;
+
+                button.classList.add('onchat')
+
+                input = button.parentElement.querySelector('input');
+                let question = input.value;
+                input.value = '';
+
+                last_chat=null
+
+                fetch(`${hostUrl}/home/{{doc_id}}/ask/${question}`, {
+                    method: 'POST'
+                }) 
+                .then(response => {
+                    last_chat=null;
+                    onChat=false;
+                    button.classList.remove('onchat');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.warn) {
+                        console.log(data.warn);
+                        document.querySelector('.warn-banner').classList.remove("hidden");
+                        document.querySelector('.warn-banner').querySelector("h1").innerText = lang[data.warn]?.[langCode] ?? data.warn
+                    } else{
+                        document.querySelectorAll('.credits').forEach(el => {
+                            let text = "credits"
+                            el.innerText = `${data.credits} ${lang[text]?.[langCode] ?? text}`
+                        })
+                    }
+                })
+                .catch(error => {
+                    onChat=false;
+                    button.classList.remove('onchat')
+                })
+            }
+        }
+
+        if ('{{doc_id}}'){
+            getChat()
+            window.setInterval(getChat, 1000);
+        }
+
+        function getSelectedText() {
+            if (window.getSelection) {
+                return window.getSelection().toString();
+            } else if (document.selection) {
+                return document.selection.createRange().text;
+            }
+            return '';
+        }
+
+        function textSelected() {
+            let gotSelectedText = getSelectedText()
+            if (gotSelectedText!='' && gotSelectedText.length<10000){
+                selectedText = gotSelectedText
+                document.querySelector('.explain-but').disabled = false;
+                document.querySelector('.explain-but').style.backgroundColor='#782600';
+                document.querySelector('.explain-but').style.cursor = 'pointer';
+
+                let sumChars = {{ sum_chars|default(0) }};
+                let cost = Math.ceil((selectedText.length+sumChars)/6000)
+                let acceptText = ["It will cost", "credits"]
+                document.querySelector('.exp-cost').innerText = `${lang[acceptText[0]]?.[langCode] ?? acceptText[0]} ${cost} ${lang[acceptText[1]]?.[langCode] ?? acceptText[1]}`
+            }
+        }
+
+        document.addEventListener('selectionchange', () => {
+            if (document.querySelector('.explain-but') && !document.querySelector('.explain-but').disabled && getSelectedText() == "") {
+                document.querySelector('.explain-but').disabled = true;
+                document.querySelector('.explain-but').style.backgroundColor='rgba(176, 59, 5, 0.45)';
+                document.querySelector('.explain-but').style.cursor = 'unset';
+
+                var text = `It will cost 0 credits`
+                document.querySelector('.exp-cost').innerText = lang[text]?.[langCode] ?? text
+            }
+        });
+
+
+        let text = "credits"
+        document.querySelectorAll('.credits').forEach(el => el.innerText = `{{credits}} ${lang[text]?.[langCode] ?? text}`)
+
+      </script>
+</body>
+</html>
+
+            

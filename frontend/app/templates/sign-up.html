@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DocuCup</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <script src="{{ url_for('static', filename='lang.js') }}"></script>
+</head>
+<body>
+    <header style="margin: 30px 30px 50px 30px; justify-content: space-between" class="flex">
+        <div style="align-items: center;" class="main flex">
+            <img style="width: 30px;" src="../static/images/logo.png">
+            <p style="font-weight: bold; margin-left: 15px; font-size: 18px;">
+                Docu
+                <span style="font-size: 18px;color: var(--primary)">Cup</span>
+            </p>
+        </div>
+        <button class="border-button" onclick="window.location.href='/'">To main</button>
+    </header>
+    <form method="POST" style="align-items: center" class="flex column">
+        <h1 style="font-weight: bold; font-size: 36px;">Welcome</h1>
+        <p style="font-weight: bold; font-size: 18px;">Lets create an account</p>
+        <div style="margin: 20px 0 0 0" class="input">
+            <input type="email" value="{{email}}" name="email" autocomplete="username" placeholder=" " required>
+            <label>Email address</label>
+        </div>
+        <div style="margin: 20px 0 40px 0" class="input">
+            <input type="password" value="{{password}}" name="password" autocomplete="current-password" placeholder=" " required>
+            <label>Password</label>
+        </div>
+        <button class="primary-button">Continue</button>
+        <p style="margin: 20px 0 0 0">Already have an account? <button type="button" class="text-button" onclick="window.location.href='/log-in'">Login</button></p>
+    </form>
+
+
+    {% if warn %}
+    <div class="flex center" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.5)">
+        <div class="flex center column between" style="padding: 50px 0 40px 0; width: 460px; height: 190px; background-color: #fff; border-radius: 12px;">
+            <h1 style="font-size: 24px;">{{warn}}</h1>
+            <button onclick="this.parentElement.parentElement.classList.add('hidden')" class="primary-button">Ok</button>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <script>
+        translatePage()
+    </script>
+</body>
+</html>
+
+            

@@ -1,0 +1,322 @@
+:root {
+    --primary: #99C5B5;
+    --secondary: #C69A72;
+    --button-primary: #782600;
+    --button-secondary: #F18F01;
+    --text: #494949;
+    --second-background: #f9f9f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    line-height: 1.2;
+    font-size: 14px;
+    color: var(--text);
+    box-sizing: border-box;
+}
+
+  
+body {
+    background-color: #fff;
+}
+
+.primary-button {
+    padding: 9px 18px;
+    background-color: var(--button-primary);
+    color:#fff;
+    font-weight: bold;
+ 	border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.primary-button:hover{
+    background-color: #782600e4;
+}
+
+.border-button {
+    padding: 7px 16px;
+    color: var(--button-secondary);
+  	background-color: transparent;
+  	border: 2px solid var(--button-secondary);
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.border-button:hover{
+    background-color: #f1910142;
+}
+
+.icon-button {
+    padding: 10px;
+    border-radius: 6px;
+    color: var(--button-secondary);
+  	background-color: transparent;
+  	border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.icon-button:hover{
+    background-color: #ececec;
+}
+
+.text-button {
+    color: var(--button-secondary);
+  	background-color: transparent;
+    border-radius: 6px;
+    padding: 10px;
+  	border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.text-button:hover{
+    background-color: rgb(from var(--secondary) r g b / 0.1);
+}
+
+.text-black-button {
+    padding: 2px;
+  	background-color: transparent;
+    border-radius: 6px;
+    padding: 10px;
+  	border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.text-black-button:hover{
+    background-color: #ececec;
+}
+
+.text-icon-button{
+  	background-color: transparent;
+    width: 120px;
+    border-radius: 10px;
+    padding: 8px;
+  	border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.text-icon-button:hover{
+    background-color: #ececec;
+}
+.text-icon-button.activate{
+    background-color: var(--primary);
+}
+
+
+.acc-icon-button{
+    background-color: transparent;
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.acc-icon-button:hover{
+  background-color: #ececec;
+}
+
+
+.page-button{
+    padding: 6px 0;
+    font-weight: 500;
+    background-color: transparent;
+    border-radius: 6px;
+    border: 2px solid var(--text);
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+
+
+
+.doc-button{
+  	background-color: transparent;
+    border-radius: 6px;
+    padding: 10px;
+  	border: none;
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+.doc-button .info{
+    opacity: 0;
+    background-color: transparent;
+    border: none;
+}
+.doc-button:hover, .doc-button.activate{
+    background-color: #ececec;
+}
+.doc-button:hover .info, .doc-button.activate .info{
+    opacity: 1;
+}
+.doc-button.active{
+    background-color: #e3e3e3;
+}
+
+
+.form-button{
+    width: 100%;
+    background-color: transparent;
+    border-radius: 6px;
+    padding: 9px 12px;
+    border: none;
+    cursor: pointer;
+    gap: 5px;
+    align-items: center;
+}
+.form-button:hover{
+    background-color: #ececec;
+}
+
+.flex{
+  	display: flex;
+}
+
+.flex.center{
+ 	justify-content: center;
+ 	align-items: center;
+}
+
+.flex.column{
+ 	flex-direction: column
+}
+
+.flex.between{
+    justify-content: space-between;
+}
+
+
+/* Input */
+.input {
+    position: relative;
+    width: 360px;
+}
+.input input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #b4b4b4;
+    font-size: 16px;
+    outline:none;
+}
+
+.input input:focus {
+    border-color: var(--secondary);
+}
+
+.input label {
+    position: absolute;
+    left: 18px;
+    top: 16px;
+    font-size: 16px;
+    color: #b4b4b4;
+    background: #fff;
+    pointer-events: none;
+    padding: 0 4px;
+    transition: 0.2s ease all;
+}
+
+.input input:focus + label,
+.input input:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 18px;
+    font-size: 13px;
+    color: var(--secondary);
+}
+
+/* --- */
+
+.circle-icon{
+    width:32px;
+    height: 32px;
+    border-radius: 999px;
+}
+
+/* Input special */
+
+.input-special{
+    margin: auto;
+    width: 90%;
+    position: relative;
+}
+
+.input-special input{
+    padding: 12px 18px;
+    height: 52px;
+    border: 2px solid rgb(from var(--primary) r g b / 0.2);
+    outline: 2px solid rgb(from var(--primary) r g b / 0.1);
+    border-radius: 18px;
+    font-size: 16px;
+}
+
+.input-special button{
+    position: absolute;
+    right: 18px;
+    top: 8.5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 999px;
+    border: none;
+    background-color: var(--primary);
+    cursor: pointer;
+    transition: 0.3s ease all;
+}
+
+.input-special button:hover{
+    background-color: rgb(from var(--primary) r g b / 0.8);
+}
+
+.input-special button span{
+    color: #fff;
+}
+
+/* --- */
+
+.message{
+    max-width: 60%;
+    padding: 10px 20px;
+    border-radius: 18px;
+    font-size: 16px;
+    background-color: var(--second-background);
+    line-height: 1.4;
+    margin-left: auto;
+    margin-bottom: 50px;
+}
+
+.answer{
+    font-size: 16px;
+    margin-bottom: 50px;
+}
+
+button.onchat{
+    background-color: #99c5b58f;
+    cursor: unset;
+}
+button.onchat:hover{
+    background-color: #99c5b58f;
+}
+
+/* File input */
+
+.file-input {
+    padding: 20px 0;
+    border: 3px dotted #b4b4b4;
+    width: 360px;
+}
+
+.file-input h4 {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.file-input p {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #a3a3a3;
+}
+
+/* --- */
+
+.hidden{
+    display: none;
+}

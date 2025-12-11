@@ -6,5 +6,6 @@
 
 •	I got third place in this competition
 
+<img width="1491" height="857" alt="image" src="https://github.com/user-attachments/assets/6c770919-a6ee-4865-9708-036584b308e1" />
 
 ## `This program can be A little bit outdated`
